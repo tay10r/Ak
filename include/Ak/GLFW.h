@@ -24,7 +24,17 @@ class GLFWEventObserver
 public:
   virtual ~GLFWEventObserver() = default;
 
-  virtual void resizeEvent(int w, int h) = 0;
+  /// Called when the platform requests an animation frame. On destkop platforms, this is called at every iteration of
+  /// the render loop. On the browser, this is called when the browser decides is appropriate.
+  virtual void animationFrameEvent() {}
+
+  virtual void resizeEvent(int /* width */, int /* height */) {}
+
+  virtual void mouseMoveEvent(double /* x */, double /* y */) {}
+
+  virtual void mousePressEvent(int /* button */, int /* mods */) {}
+
+  virtual void mouseReleaseEvent(int /* button */, int /* mods */) {}
 };
 
 class GLFWWindow final
@@ -54,6 +64,18 @@ public:
 
   /// @note Only meant for internal use.
   void notifyFramebufferResize(int w, int h);
+
+  /// @note Only meant for internal use.
+  void notifyMouseMove(double, double);
+
+  /// @note Only meant for internal use.
+  void notifyMousePress(int, int);
+
+  /// @note Only meant for internal use.
+  void notifyMouseRelease(int, int);
+
+  /// @note Only meant for internal use.
+  void notifyAnimationFrame();
 
 private:
   char* m_titleCopy = nullptr;

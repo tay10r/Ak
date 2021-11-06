@@ -63,6 +63,8 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
 
       while (!glfwWindowShouldClose(window)) {
 
+        window.notifyAnimationFrame();
+
         app->requestAnimationFrame(window);
 
         glfwSwapBuffers(window);

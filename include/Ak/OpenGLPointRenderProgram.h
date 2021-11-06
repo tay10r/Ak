@@ -14,7 +14,12 @@ class OpenGLPointRenderProgram final : public OpenGLShaderProgramTemplate<OpenGL
 public:
   OpenGLPointRenderProgram();
 
+  void setMVP(const glm::mat4& mvp);
+
   void render(OpenGLVertexBuffer<glm::vec3, glm::vec4>& vertexBuffer);
+
+private:
+  GLint m_mvpLocation = -1;
 };
 
 } // namespace Ak

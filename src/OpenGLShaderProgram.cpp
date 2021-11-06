@@ -1,11 +1,13 @@
 #include <Ak/OpenGLShaderProgram.h>
 
+#include <glm/glm.hpp>
+
+#include <cmrc/cmrc.hpp>
+
 #include <array>
 #include <sstream>
 
 #include <cstring>
-
-#include <cmrc/cmrc.hpp>
 
 CMRC_DECLARE(AkShaders);
 
@@ -181,6 +183,69 @@ std::string
 OpenGLShaderProgram::getLinkInfoLog() const
 {
   return m_linkInfoLog;
+}
+
+GLint
+OpenGLShaderProgram::getUniformLocation(const char* name) const
+{
+  assert(m_boundFlag);
+
+  return glGetUniformLocation(m_programID, name);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, float value)
+{
+  assert(m_boundFlag);
+
+  glUniform1f(location, value);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, const glm::vec2& value)
+{
+  assert(m_boundFlag);
+
+  glUniform2f(location, value.x, value.y);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, const glm::vec3& value)
+{
+  assert(m_boundFlag);
+
+  glUniform3f(location, value.x, value.y, value.z);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, const glm::vec4& value)
+{
+  assert(m_boundFlag);
+
+  glUniform4f(location, value.x, value.y, value.z, value.w);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, const glm::mat2& value)
+{
+  assert(m_boundFlag);
+
+  glUniformMatrix2fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, const glm::mat3& value)
+{
+  assert(m_boundFlag);
+
+  glUniformMatrix3fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
+void
+OpenGLShaderProgram::setUniformValue(GLint location, const glm::mat4& value)
+{
+  assert(m_boundFlag);
+  glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 }
 
 } // namespace Ak

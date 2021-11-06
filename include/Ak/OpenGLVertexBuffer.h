@@ -65,12 +65,12 @@ public:
     GenericVertex<Others...> others;
 
     template<int index>
-    constexpr auto& at() noexcept
+    constexpr auto& attribAt() noexcept
     {
       if constexpr (index == 0)
         return attrib;
       else
-        return others.template at<index - 1>();
+        return others.template attribAt<index - 1>();
     }
 
     static constexpr size_t bytesPerVertex() { return sizeof(Attrib) + GenericVertex<Others...>::bytesPerVertex(); }
@@ -94,7 +94,7 @@ public:
     LastAttrib attrib;
 
     template<int index>
-    constexpr LastAttrib& at() noexcept
+    constexpr LastAttrib& attribAt() noexcept
     {
       static_assert(index == 0, "Attribute index is out of bounds.");
 

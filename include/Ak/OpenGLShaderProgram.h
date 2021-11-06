@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/fwd.hpp>
+
 #include <string>
 
 namespace Ak {
@@ -28,6 +30,22 @@ public:
   std::string getFragInfoLog() const;
 
   std::string getLinkInfoLog() const;
+
+  GLint getUniformLocation(const char* name) const;
+
+  void setUniformValue(GLint location, float value);
+
+  void setUniformValue(GLint location, const glm::vec2& value);
+
+  void setUniformValue(GLint location, const glm::vec3& value);
+
+  void setUniformValue(GLint location, const glm::vec4& value);
+
+  void setUniformValue(GLint location, const glm::mat2& value);
+
+  void setUniformValue(GLint location, const glm::mat3& value);
+
+  void setUniformValue(GLint location, const glm::mat4& value);
 
 private:
   GLuint m_programID = 0;

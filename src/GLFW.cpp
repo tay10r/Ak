@@ -54,6 +54,25 @@ framebufferResizeCallback(GLFWwindow* window, int w, int h)
   window_->notifyFramebufferResize(w, h);
 }
 
+void
+cursorPosCallback(GLFWwindow* window, double x, double y)
+{
+  GLFWWindow* window_ = (GLFWWindow*)glfwGetWindowUserPointer(window);
+
+  window_->notifyMouseMove(x, y);
+}
+
+void
+mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+  GLFWWindow* window_ = (GLFWWindow*)glfwGetWindowUserPointer(window);
+
+  if (action == GLFW_PRESS)
+    window_->notifyMousePress(button, mods);
+  else
+    window_->notifyMouseRelease(button, mods);
+}
+
 } // namespace
 
 bool
@@ -89,6 +108,10 @@ GLFWWindow::GLFWWindow(int w, int h, const char* title, GLFWmonitor* monitor, GL
   glfwSetWindowUserPointer(m_self, this);
 
   glfwSetFramebufferSizeCallback(m_self, framebufferResizeCallback);
+
+  glfwSetCursorPosCallback(m_self, cursorPosCallback);
+
+  glfwSetMouseButtonCallback(m_self, mouseButtonCallback);
 
   if (m_self) {
 
@@ -157,6 +180,34 @@ GLFWWindow::notifyFramebufferResize(int w, int h)
 {
   for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
     eventObserver->resizeEvent(w, h);
+}
+
+void
+GLFWWindow::notifyMouseMove(double x, double y)
+{
+  for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
+    eventObserver->mouseMoveEvent(x, y);
+}
+
+void
+GLFWWindow::notifyMousePress(int button, int mods)
+{
+  for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
+    eventObserver->mousePressEvent(button, mods);
+}
+
+void
+GLFWWindow::notifyMouseRelease(int button, int mods)
+{
+  for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
+    eventObserver->mouseReleaseEvent(button, mods);
+}
+
+void
+GLFWWindow::notifyAnimationFrame()
+{
+  for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
+    eventObserver->animationFrameEvent();
 }
 
 } // namespace Ak
