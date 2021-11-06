@@ -135,13 +135,21 @@ OpenGLShaderProgram::~OpenGLShaderProgram()
 void
 OpenGLShaderProgram::bind()
 {
+  assert(!m_boundFlag);
+
   glUseProgram(m_programID);
+
+  m_boundFlag = true;
 }
 
 void
 OpenGLShaderProgram::unbind()
 {
+  assert(m_boundFlag);
+
   glUseProgram(0);
+
+  m_boundFlag = false;
 }
 
 bool

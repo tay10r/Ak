@@ -65,7 +65,8 @@ function(transpile_shaders target)
 endfunction(transpile_shaders output_list_var)
 
 transpile_shaders(shaderlib
-  render_texture_quad_pair)
+  render_texture_quad_pair
+  render_points)
 
 ###########################
 # Build the main library. #
@@ -78,11 +79,13 @@ add_library(Ak
   include/Ak/OpenGLTexture2D.h
   include/Ak/OpenGLTextureQuadPair.h
   include/Ak/OpenGLShaderProgram.h
+  include/Ak/OpenGLPointRenderProgram.h
   include/Ak/GLFW.h
   include/Ak/SingleWindowGLFWApp.h
   src/OpenGLTexture2D.cpp
   src/OpenGLTextureQuadPair.cpp
   src/OpenGLShaderProgram.cpp
+  src/OpenGLPointRenderProgram.cpp
   src/GLFW.cpp
   src/SingleWindowGLFWApp.cpp
   glad/src/glad.c)
@@ -117,3 +120,5 @@ function(add_example_program name)
 endfunction(add_example_program name)
 
 add_example_program(cpp_path_tracer examples/cpp_path_tracer.cpp)
+
+add_example_program(render_points examples/render_points.cpp)

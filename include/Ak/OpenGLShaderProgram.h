@@ -17,7 +17,9 @@ public:
 
   void bind();
 
-  static void unbind();
+  void unbind();
+
+  bool isBound() const { return m_boundFlag; }
 
   bool isLinked();
 
@@ -35,6 +37,8 @@ private:
   std::string m_fragInfoLog;
 
   std::string m_linkInfoLog;
+
+  bool m_boundFlag = false;
 };
 
 template<typename Derived>
