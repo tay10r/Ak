@@ -74,4 +74,12 @@ OpenGLFramebuffer::attach(const std::vector<OpenGLTexture2D*>& textures)
   glDrawBuffers(drawBuffers.size(), &drawBuffers[0]);
 }
 
+bool
+OpenGLFramebuffer::isComplete() const
+{
+  assert(m_boundFlag);
+
+  return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+}
+
 } // namespace Ak

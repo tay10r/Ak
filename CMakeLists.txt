@@ -98,6 +98,8 @@ add_library(Ak
   src/SingleWindowGLFWApp.cpp
   src/stb/stb_image.h
   src/stb/stb_image.c
+  src/stb/stb_image_write.h
+  src/stb/stb_image_write.c
   glad/src/glad.c)
 
 if(NOT MSVC)
@@ -136,3 +138,5 @@ add_example_program(cpp_path_tracer examples/cpp_path_tracer.cpp)
 add_example_program(render_points examples/render_points.cpp)
 
 add_example_program(blur_effect examples/blur_effect.cpp)
+
+add_example_program(render_to_texture examples/render_to_texture.cpp)

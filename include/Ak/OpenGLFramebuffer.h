@@ -20,6 +20,8 @@ public:
 
   bool isBound() const noexcept { return m_boundFlag; }
 
+  bool isComplete() const;
+
   void bind();
 
   void unbind();

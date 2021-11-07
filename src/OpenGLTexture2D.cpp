@@ -1,6 +1,9 @@
 #include <Ak/OpenGLTexture2D.h>
 
 #include <stb_image.h>
+#include <stb_image_write.h>
+
+#include <memory>
 
 #include <cassert>
 
@@ -77,6 +80,44 @@ OpenGLTexture2D::openFile(const char* path, bool flipVertically)
   return true;
 }
 
+bool
+OpenGLTexture2D::savePNG(const char* path, GLenum format, bool flipVertically)
+{
+  assert(m_boundFlag);
+
+  int channelCount = 0;
+
+  switch (format) {
+    case GL_R:
+      channelCount = 1;
+      break;
+    case GL_RGB:
+      channelCount = 3;
+      break;
+    case GL_RGBA:
+      channelCount = 4;
+      break;
+  }
+
+  if (!channelCount)
+    return false;
+
+  GLint w = 0;
+  GLint h = 0;
+
+  glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+
+  glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+
+  std::unique_ptr<unsigned char[]> buffer(new unsigned char[w * h * channelCount]);
+
+  glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, buffer.get());
+
+  stbi_flip_vertically_on_write(flipVertically);
+
+  return !!stbi_write_png(path, w, h, channelCount, buffer.get(), w * channelCount);
+}
+
 void
 OpenGLTexture2D::bind()
 {
@@ -129,6 +170,32 @@ void
 OpenGLTexture2D::write(GLint x, GLint y, GLint w, GLint h, const glm::vec4* rgba)
 {
   write(x, y, w, h, GL_RGBA, GL_FLOAT, rgba);
+}
+
+void
+OpenGLTexture2D::read(GLint level, GLenum format, GLenum type, void* pixels) const
+{
+  assert(m_boundFlag);
+
+  glGetTexImage(GL_TEXTURE_2D, level, format, type, pixels);
+}
+
+void
+OpenGLTexture2D::read(GLint level, float* pixels) const
+{
+  read(level, GL_R, GL_FLOAT, pixels);
+}
+
+void
+OpenGLTexture2D::read(GLint level, glm::vec3* rgb) const
+{
+  read(level, GL_RGB, GL_FLOAT, rgb);
+}
+
+void
+OpenGLTexture2D::read(GLint level, glm::vec4* rgba) const
+{
+  read(level, GL_RGBA, GL_FLOAT, rgba);
 }
 
 } // namespace Ak
