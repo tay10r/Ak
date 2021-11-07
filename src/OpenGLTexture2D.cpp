@@ -1,5 +1,7 @@
 #include <Ak/OpenGLTexture2D.h>
 
+#include <cassert>
+
 namespace Ak {
 
 OpenGLTexture2D::OpenGLTexture2D()
@@ -24,25 +26,57 @@ OpenGLTexture2D::~OpenGLTexture2D()
 }
 
 void
-OpenGLTexture2D::bind() const
+OpenGLTexture2D::bind()
 {
+  assert(m_boundFlag == false);
+
   glBindTexture(GL_TEXTURE_2D, m_textureID);
+
+  m_boundFlag = true;
 }
 
 void
 OpenGLTexture2D::unbind()
 {
+  assert(m_boundFlag == true);
+
   glBindTexture(GL_TEXTURE_2D, 0);
+
+  m_boundFlag = false;
 }
 
 void
-OpenGLTexture2D::uploadRGB(const float* rgb, int w, int h)
+OpenGLTexture2D::resize(GLint w, GLint h, GLenum format, GLenum type)
 {
-  bind();
+  assert(m_boundFlag);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_FLOAT, rgb);
+  glTexImage2D(GL_TEXTURE_2D, 0, format, w, h, 0, format, type, nullptr);
+}
 
-  unbind();
+void
+OpenGLTexture2D::write(GLint x, GLint y, GLint w, GLint h, GLenum format, GLenum type, const void* pixels)
+{
+  assert(m_boundFlag);
+
+  glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, format, type, pixels);
+}
+
+void
+OpenGLTexture2D::write(GLint x, GLint y, GLint w, GLint h, const float* r)
+{
+  write(x, y, w, h, GL_R, GL_FLOAT, r);
+}
+
+void
+OpenGLTexture2D::write(GLint x, GLint y, GLint w, GLint h, const glm::vec3* rgb)
+{
+  write(x, y, w, h, GL_RGB, GL_FLOAT, rgb);
+}
+
+void
+OpenGLTexture2D::write(GLint x, GLint y, GLint w, GLint h, const glm::vec4* rgba)
+{
+  write(x, y, w, h, GL_RGBA, GL_FLOAT, rgba);
 }
 
 } // namespace Ak

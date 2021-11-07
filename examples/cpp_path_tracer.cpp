@@ -15,6 +15,8 @@ namespace {
 
 struct Framebuffer final
 {
+  Ak::OpenGLTexture2D colorTexture;
+
   std::vector<glm::vec3> rgb;
 
   std::vector<std::minstd_rand> rng;
@@ -49,6 +51,12 @@ public:
 
     for (int i = 0; i < m_framebuffer->rng.size(); i++)
       m_framebuffer->rng[i] = std::minstd_rand(seedRng());
+
+    m_framebuffer->colorTexture.bind();
+
+    m_framebuffer->colorTexture.resize(w, h, GL_RGB, GL_FLOAT);
+
+    m_framebuffer->colorTexture.unbind();
   }
 
 private:
@@ -86,7 +94,11 @@ public:
       m_framebuffer->rgb[i] = glm::vec3(u, v, 1);
     }
 
-    m_texture.uploadRGB((const float*)m_framebuffer->rgb.data(), m_framebuffer->width, m_framebuffer->height);
+    m_framebuffer->colorTexture.bind();
+
+    m_framebuffer->colorTexture.write(0, 0, m_framebuffer->width, m_framebuffer->height, m_framebuffer->rgb.data());
+
+    m_framebuffer->colorTexture.unbind();
 
     m_textureQuadProgram.render(m_textureQuad);
   }
@@ -94,9 +106,7 @@ public:
 private:
   std::shared_ptr<Framebuffer> m_framebuffer{ new Framebuffer() };
 
-  Ak::OpenGLTexture2D m_texture;
-
-  Ak::OpenGLTextureQuadPair m_textureQuad{ m_texture };
+  Ak::OpenGLTextureQuadPair m_textureQuad{ &m_framebuffer->colorTexture };
 
   Ak::OpenGLTextureQuadPair::RenderProgram m_textureQuadProgram;
 };

@@ -9,8 +9,8 @@ OpenGLTextureQuadPair::RenderProgram::RenderProgram()
                                                "shaders/render_texture_quad_pair.frag")
 {}
 
-OpenGLTextureQuadPair::OpenGLTextureQuadPair(const OpenGLTexture2D& texture)
-  : m_texture(texture)
+OpenGLTextureQuadPair::OpenGLTextureQuadPair(OpenGLTexture2D* texture)
+  : m_texturePtr(texture)
 {
   glGenVertexArrays(1, &m_vertexArrayObject);
 
@@ -60,24 +60,18 @@ OpenGLTextureQuadPair::~OpenGLTextureQuadPair()
     glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
-const OpenGLTexture2D&
-OpenGLTextureQuadPair::getTextureRef() const
-{
-  return m_texture;
-}
-
 void
-OpenGLTextureQuadPair::RenderProgram::render(const OpenGLTextureQuadPair& textureQuadPair)
+OpenGLTextureQuadPair::RenderProgram::render(OpenGLTextureQuadPair& textureQuadPair)
 {
   bind();
 
   glBindVertexArray(textureQuadPair.getVertexArrayObjectID());
 
-  textureQuadPair.getTextureRef().bind();
+  textureQuadPair.getTexturePtr()->bind();
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  textureQuadPair.getTextureRef().unbind();
+  textureQuadPair.getTexturePtr()->unbind();
 
   glBindVertexArray(0);
 

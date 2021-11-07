@@ -76,16 +76,20 @@ find_package(glm REQUIRED)
 find_package(glfw3 REQUIRED)
 
 add_library(Ak
+  include/Ak/OpenGLFramebuffer.h
+  include/Ak/OpenGLPointRenderProgram.h
+  include/Ak/OpenGLRenderbuffer.h
+  include/Ak/OpenGLShaderProgram.h
   include/Ak/OpenGLTexture2D.h
   include/Ak/OpenGLTextureQuadPair.h
-  include/Ak/OpenGLShaderProgram.h
-  include/Ak/OpenGLPointRenderProgram.h
   include/Ak/GLFW.h
   include/Ak/SingleWindowGLFWApp.h
+  src/OpenGLFramebuffer.cpp
+  src/OpenGLPointRenderProgram.cpp
+  src/OpenGLRenderbuffer.cpp
+  src/OpenGLShaderProgram.cpp
   src/OpenGLTexture2D.cpp
   src/OpenGLTextureQuadPair.cpp
-  src/OpenGLShaderProgram.cpp
-  src/OpenGLPointRenderProgram.cpp
   src/GLFW.cpp
   src/SingleWindowGLFWApp.cpp
   glad/src/glad.c)

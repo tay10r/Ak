@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/fwd.hpp>
+
 namespace Ak {
 
 class OpenGLTexture2D final
@@ -13,18 +15,30 @@ public:
 
   OpenGLTexture2D(const OpenGLTexture2D&) = delete;
 
-  void bind() const;
+  GLuint id() noexcept { return m_textureID; }
 
-  static void unbind();
+  bool isBound() const noexcept { return m_boundFlag; }
+
+  void bind();
+
+  void unbind();
+
+  void resize(GLint w, GLint h, GLenum format, GLenum type);
+
+  void write(GLint x, GLint y, GLint w, GLint h, GLenum format, GLenum type, const void* pixels);
+
+  void write(GLint x, GLint y, GLint w, GLint h, const float* r);
+
+  void write(GLint x, GLint y, GLint w, GLint h, const glm::vec3* rgb);
+
+  void write(GLint x, GLint y, GLint w, GLint h, const glm::vec4* rgba);
 
   bool isCreated() const noexcept { return m_textureID > 0; }
 
-  void uploadRGB(const unsigned char* rgb, int w, int h);
-
-  void uploadRGB(const float* rgb, int w, int h);
-
 private:
   GLuint m_textureID = 0;
+
+  bool m_boundFlag = false;
 };
 
 } // namespace Ak

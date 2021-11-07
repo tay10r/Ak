@@ -16,16 +16,16 @@ public:
   public:
     RenderProgram();
 
-    void render(const OpenGLTextureQuadPair&);
+    void render(OpenGLTextureQuadPair&);
   };
 
-  OpenGLTextureQuadPair(const OpenGLTexture2D& texturRef);
+  OpenGLTextureQuadPair(OpenGLTexture2D* texturePtr);
 
   OpenGLTextureQuadPair(OpenGLTextureQuadPair&) = delete;
 
   ~OpenGLTextureQuadPair();
 
-  const OpenGLTexture2D& getTextureRef() const;
+  OpenGLTexture2D* getTexturePtr() const { return m_texturePtr; }
 
   GLuint getVertexArrayObjectID() const { return m_vertexArrayObject; }
 
@@ -36,7 +36,7 @@ private:
 
   GLuint m_vertexBuffer = 0;
 
-  const OpenGLTexture2D& m_texture;
+  OpenGLTexture2D* m_texturePtr;
 };
 
 } // namespace Ak
