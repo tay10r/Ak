@@ -110,7 +110,7 @@ private:
   };
 
 private:
-  vec2 m_rotationSpeed = vec2(0.1 / Pi<Float>::value(), 0.1 / Pi<Float>::value());
+  vec2 m_rotationSpeed = vec2(0.01 / Pi<Float>::value(), 0.01 / Pi<Float>::value());
 
   Float m_pitch = 0;
 

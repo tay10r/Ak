@@ -67,7 +67,9 @@ endfunction(transpile_shaders output_list_var)
 transpile_shaders(shaderlib
   blur_effect
   render_texture_quad_pair
-  render_points)
+  render_points
+  render_lidar
+  render_lidar_lighting)
 
 ###########################
 # Build the main library. #
@@ -79,6 +81,7 @@ find_package(glfw3 REQUIRED)
 add_library(Ak
   include/Ak/OpenGLBlurEffect.h
   include/Ak/OpenGLFramebuffer.h
+  include/Ak/OpenGLLidarRenderProgram.h
   include/Ak/OpenGLPointRenderProgram.h
   include/Ak/OpenGLRenderbuffer.h
   include/Ak/OpenGLScreenSpaceEffect.h
@@ -89,6 +92,7 @@ add_library(Ak
   include/Ak/SingleWindowGLFWApp.h
   src/OpenGLBlurEffect.cpp
   src/OpenGLFramebuffer.cpp
+  src/OpenGLLidarRenderProgram.cpp
   src/OpenGLPointRenderProgram.cpp
   src/OpenGLRenderbuffer.cpp
   src/OpenGLShaderProgram.cpp
@@ -140,3 +144,5 @@ add_example_program(render_points examples/render_points.cpp)
 add_example_program(blur_effect examples/blur_effect.cpp)
 
 add_example_program(render_to_texture examples/render_to_texture.cpp)
+
+add_example_program(render_lidar examples/render_lidar.cpp)

@@ -35,7 +35,7 @@ OpenGLPointRenderProgram::render(OpenGLVertexBuffer<glm::vec3, glm::vec4>& buffe
 
   assert(buffer.isBound());
 
-  glDrawArrays(GL_POINTS, 0, buffer.vertexCount());
+  glDrawArrays(GL_POINTS, 0, buffer.getVertexCount());
 }
 
 } // namespace Ak

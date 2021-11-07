@@ -118,6 +118,8 @@ public:
 
   OpenGLVertexBuffer();
 
+  OpenGLVertexBuffer(OpenGLVertexBuffer&&);
+
   OpenGLVertexBuffer(const OpenGLVertexBuffer&) = delete;
 
   ~OpenGLVertexBuffer();
@@ -142,7 +144,10 @@ public:
   /// @param vertexCount The number of vertices to write to the buffer.
   void write(size_t offset, const Vertex* data, size_t vertexCount);
 
-  size_t vertexCount();
+  /// Gets the number of vertices in the buffer.
+  ///
+  /// @note The vertex buffer must be bound before calling this function.
+  size_t getVertexCount() const;
 
 private:
   GLuint m_vertexBuffer = 0;
@@ -166,6 +171,17 @@ OpenGLVertexBuffer<Attribs...>::OpenGLVertexBuffer()
   Vertex::enableAll(0, 0, Vertex::bytesPerVertex());
 
   glBindVertexArray(0);
+}
+
+template<typename... Attribs>
+OpenGLVertexBuffer<Attribs...>::OpenGLVertexBuffer(OpenGLVertexBuffer<Attribs...>&& other)
+  : m_vertexArrayObject(other.m_vertexArrayObject)
+  , m_vertexBuffer(other.m_vertexBuffer)
+  , m_boundFlag(other.m_boundFlag)
+{
+  other.m_vertexArrayObject = 0;
+  other.m_vertexBuffer = 0;
+  other.m_boundFlag = false;
 }
 
 template<typename... Attribs>
@@ -230,7 +246,7 @@ OpenGLVertexBuffer<Attribs...>::unbind()
 
 template<typename... Attribs>
 size_t
-OpenGLVertexBuffer<Attribs...>::vertexCount()
+OpenGLVertexBuffer<Attribs...>::getVertexCount() const
 {
   assert(m_boundFlag);
 
