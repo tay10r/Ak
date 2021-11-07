@@ -11,9 +11,22 @@ class OpenGLTexture2D final
 public:
   OpenGLTexture2D();
 
+  OpenGLTexture2D(OpenGLTexture2D&& other);
+
   ~OpenGLTexture2D();
 
   OpenGLTexture2D(const OpenGLTexture2D&) = delete;
+
+  /// Opens an image file and loads the data onto the texture.
+  ///
+  /// @note The texture must be bound before calling this function.
+  ///
+  /// @param path The path of the image to open.
+  ///
+  /// @param flipVertically Whether or not the image should be flipped when loaded.
+  ///
+  /// @return True on success, false on failure.
+  bool openFile(const char* path, bool flipVertically = true);
 
   GLuint id() noexcept { return m_textureID; }
 

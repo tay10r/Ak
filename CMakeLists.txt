@@ -65,6 +65,7 @@ function(transpile_shaders target)
 endfunction(transpile_shaders output_list_var)
 
 transpile_shaders(shaderlib
+  blur_effect
   render_texture_quad_pair
   render_points)
 
@@ -76,14 +77,17 @@ find_package(glm REQUIRED)
 find_package(glfw3 REQUIRED)
 
 add_library(Ak
+  include/Ak/OpenGLBlurEffect.h
   include/Ak/OpenGLFramebuffer.h
   include/Ak/OpenGLPointRenderProgram.h
   include/Ak/OpenGLRenderbuffer.h
+  include/Ak/OpenGLScreenSpaceEffect.h
   include/Ak/OpenGLShaderProgram.h
   include/Ak/OpenGLTexture2D.h
   include/Ak/OpenGLTextureQuadPair.h
   include/Ak/GLFW.h
   include/Ak/SingleWindowGLFWApp.h
+  src/OpenGLBlurEffect.cpp
   src/OpenGLFramebuffer.cpp
   src/OpenGLPointRenderProgram.cpp
   src/OpenGLRenderbuffer.cpp
@@ -92,6 +96,8 @@ add_library(Ak
   src/OpenGLTextureQuadPair.cpp
   src/GLFW.cpp
   src/SingleWindowGLFWApp.cpp
+  src/stb/stb_image.h
+  src/stb/stb_image.c
   glad/src/glad.c)
 
 if(NOT MSVC)
@@ -101,7 +107,9 @@ endif(NOT MSVC)
 target_include_directories(Ak
   PUBLIC
     include
-    glad/include)
+    glad/include
+  PRIVATE
+    src/stb)
 
 target_link_libraries(Ak PUBLIC glm::glm AkShaders)
 
@@ -126,3 +134,5 @@ endfunction(add_example_program name)
 add_example_program(cpp_path_tracer examples/cpp_path_tracer.cpp)
 
 add_example_program(render_points examples/render_points.cpp)
+
+add_example_program(blur_effect examples/blur_effect.cpp)

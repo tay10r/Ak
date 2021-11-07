@@ -1,5 +1,7 @@
 #include <Ak/OpenGLTexture2D.h>
 
+#include <stb_image.h>
+
 #include <cassert>
 
 namespace Ak {
@@ -19,10 +21,60 @@ OpenGLTexture2D::OpenGLTexture2D()
   unbind();
 }
 
+OpenGLTexture2D::OpenGLTexture2D(OpenGLTexture2D&& other)
+  : m_textureID(other.m_textureID)
+  , m_boundFlag(other.m_boundFlag)
+{
+  other.m_textureID = 0;
+  other.m_boundFlag = false;
+}
+
 OpenGLTexture2D::~OpenGLTexture2D()
 {
   if (m_textureID)
     glDeleteTextures(1, &m_textureID);
+}
+
+bool
+OpenGLTexture2D::openFile(const char* path, bool flipVertically)
+{
+  assert(m_boundFlag);
+
+  int w = 0;
+  int h = 0;
+  int channelCount = 0;
+
+  stbi_set_flip_vertically_on_load(flipVertically);
+
+  unsigned char* data = stbi_load(path, &w, &h, &channelCount, 0);
+
+  if ((channelCount < 1) || (channelCount > 4)) {
+    stbi_image_free(data);
+    return false;
+  }
+
+  GLenum format = 0;
+
+  switch (channelCount) {
+    case 1:
+      format = GL_R;
+      break;
+    case 2:
+      format = GL_RG;
+      break;
+    case 3:
+      format = GL_RGB;
+      break;
+    case 4:
+      format = GL_RGBA;
+      break;
+  }
+
+  glTexImage2D(GL_TEXTURE_2D, 0, format, w, h, 0, format, GL_UNSIGNED_BYTE, data);
+
+  stbi_image_free(data);
+
+  return true;
 }
 
 void

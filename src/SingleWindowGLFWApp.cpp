@@ -30,8 +30,10 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
 
     if (std::strcmp(argv[i], "--") == 0) {
 
-      for (int j = i; j < argc; j++)
+      for (int j = i + 1; j < argc; j++)
         appArgs.emplace_back(argv[j]);
+
+      break;
 
     } else {
 
@@ -43,6 +45,8 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
 
   if (!GLFW::init())
     return EXIT_FAILURE;
+
+  bool success = true;
 
   {
     const int w = 640;
@@ -56,20 +60,24 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
 
     {
       std::unique_ptr<SingleWindowGLFWApp> app(factoryMethod(int(appArgs.size()), &appArgs[0], window));
+      if (!app)
+        success = false;
 
-      const char* title = app->title();
+      const char* title = app ? app->title() : nullptr;
       if (title)
         glfwSetWindowTitle(window, title);
 
-      while (!glfwWindowShouldClose(window)) {
+      if (app) {
+        while (!glfwWindowShouldClose(window)) {
 
-        window.notifyAnimationFrame();
+          window.notifyAnimationFrame();
 
-        app->requestAnimationFrame(window);
+          app->requestAnimationFrame(window);
 
-        glfwSwapBuffers(window);
+          glfwSwapBuffers(window);
 
-        GLFW::pollEvents();
+          GLFW::pollEvents();
+        }
       }
     }
 
@@ -78,7 +86,7 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
 
   GLFW::cleanup();
 
-  return EXIT_SUCCESS;
+  return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 } // namespace Ak
