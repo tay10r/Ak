@@ -49,6 +49,8 @@ public:
 
   void unbind();
 
+  void setMinMagFilters(GLenum minFilter, GLenum magFilter);
+
   void resize(GLint w, GLint h, GLenum format, GLenum type);
 
   void write(GLint x, GLint y, GLint w, GLint h, GLenum format, GLenum type, const void* pixels);

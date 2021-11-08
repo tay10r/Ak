@@ -95,6 +95,7 @@ add_library(Ak
   src/OpenGLLidarRenderProgram.cpp
   src/OpenGLPointRenderProgram.cpp
   src/OpenGLRenderbuffer.cpp
+  src/OpenGLScreenSpaceEffect.cpp
   src/OpenGLShaderProgram.cpp
   src/OpenGLTexture2D.cpp
   src/OpenGLTextureQuadPair.cpp

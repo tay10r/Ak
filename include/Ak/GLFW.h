@@ -12,7 +12,15 @@ namespace Ak {
 class GLFW final
 {
 public:
-  static bool init();
+  enum class MSAA
+  {
+    none,
+    x2,
+    x4,
+    x8
+  };
+
+  static bool init(MSAA msaa = MSAA::none);
 
   static void cleanup();
 

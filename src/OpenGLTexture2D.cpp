@@ -119,6 +119,15 @@ OpenGLTexture2D::savePNG(const char* path, GLenum format, bool flipVertically)
 }
 
 void
+OpenGLTexture2D::setMinMagFilters(GLenum minFilter, GLenum magFilter)
+{
+  assert(m_boundFlag);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+}
+
+void
 OpenGLTexture2D::bind()
 {
   assert(m_boundFlag == false);

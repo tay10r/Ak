@@ -20,16 +20,20 @@ public:
 
   bool isBound() const noexcept { return m_boundFlag; }
 
+  /// @note The framebuffer must be bound before calling this function.
   bool isComplete() const;
 
   void bind();
 
   void unbind();
 
+  /// @note The framebuffer must be bound before calling this function.
   void attach(OpenGLRenderbuffer&);
 
+  /// @note The framebuffer must be bound before calling this function.
   void attach(OpenGLTexture2D& colorAttachment);
 
+  /// @note The framebuffer must be bound before calling this function.
   void attach(const std::vector<OpenGLTexture2D*>& colorAttachments);
 
 private:

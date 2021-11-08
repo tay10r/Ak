@@ -11,20 +11,14 @@
 
 namespace Ak {
 
-SingleWindowGLFWApp::~SingleWindowGLFWApp() = default;
-
-const char*
-SingleWindowGLFWApp::title() const noexcept
-{
-  return nullptr;
-}
-
 int
 run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
 {
   std::vector<char*> appArgs;
 
   appArgs.emplace_back(argv[0]);
+
+  GLFW::MSAA msaa = GLFW::MSAA::none;
 
   for (int i = 1; i < argc; i++) {
 
@@ -34,16 +28,23 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
         appArgs.emplace_back(argv[j]);
 
       break;
+    }
 
+    if (std::strcmp(argv[i], "--msaa=2") == 0) {
+      msaa = GLFW::MSAA::x2;
+    } else if (std::strcmp(argv[i], "--msaa=4") == 0) {
+      msaa = GLFW::MSAA::x4;
+    } else if (std::strcmp(argv[i], "--msaa=8") == 0) {
+      msaa = GLFW::MSAA::x8;
+    } else if (std::strcmp(argv[i], "--msaa") == 0) {
+      msaa = GLFW::MSAA::x4;
     } else {
-
       std::fprintf(stderr, "Unknown option '%s'\n", argv[i]);
-
       return EXIT_FAILURE;
     }
   }
 
-  if (!GLFW::init())
+  if (!GLFW::init(msaa))
     return EXIT_FAILURE;
 
   bool success = true;
@@ -55,6 +56,9 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
     GLFWWindow window(w, h, argv[0]);
 
     window.makeCurrent();
+
+    if (msaa != GLFW::MSAA::none)
+      glEnable(GL_MULTISAMPLE);
 
     glfwSwapInterval(1);
 
@@ -80,6 +84,9 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
         }
       }
     }
+
+    if (msaa != GLFW::MSAA::none)
+      glDisable(GL_MULTISAMPLE);
 
     window.doneCurrent();
   }

@@ -27,6 +27,8 @@ public:
 
   using vec4 = glm::tvec4<Float>;
 
+  glm::vec3 position() const { return m_position; }
+
   vec3 upVector() const;
 
   vec3 forwardVector() const;

@@ -76,13 +76,28 @@ mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 } // namespace
 
 bool
-GLFW::init()
+GLFW::init(MSAA msaa)
 {
   if (glfwInit() != GLFW_TRUE)
     return false;
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+  switch (msaa) {
+    case MSAA::none:
+      break;
+    case MSAA::x2:
+      glfwWindowHint(GLFW_SAMPLES, 2);
+      break;
+    case MSAA::x4:
+      glfwWindowHint(GLFW_SAMPLES, 4);
+      break;
+    case MSAA::x8:
+      glfwWindowHint(GLFW_SAMPLES, 8);
+      break;
+  }
 
   glfwSetErrorCallback(glfwErrorCallback);
 

@@ -34,15 +34,17 @@ public:
   {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_lidarPoints.bind();
-
     glm::mat4 view = m_camera.worldToCameraMatrix();
 
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 
     glm::mat4 mvp = proj * view;
 
+    m_lidarRenderProgram.setEye(m_camera.position());
+
     m_lidarRenderProgram.setMVP(mvp);
+
+    m_lidarPoints.bind();
 
     m_lidarRenderProgram.render(m_lidarPoints);
 

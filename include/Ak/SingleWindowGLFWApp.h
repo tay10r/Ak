@@ -9,11 +9,11 @@ class SingleWindowGLFWApp
 public:
   using FactoryMethod = SingleWindowGLFWApp* (*)(int argc, char** argv, GLFWWindow& window);
 
-  virtual ~SingleWindowGLFWApp();
+  virtual ~SingleWindowGLFWApp() = default;
 
   virtual void requestAnimationFrame(GLFWWindow& window) = 0;
 
-  virtual const char* title() const noexcept;
+  virtual const char* title() const noexcept { return nullptr; }
 };
 
 int

@@ -6,7 +6,7 @@ namespace Ak {
 
 class OpenGLTexture2D;
 
-class OpenGLBlurEffect : public OpenGLScreenSpaceEffect<OpenGLBlurEffect>
+class OpenGLBlurEffect : public OpenGLScreenSpaceEffect
 {
 public:
   OpenGLBlurEffect()

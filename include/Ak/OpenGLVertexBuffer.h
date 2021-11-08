@@ -170,6 +170,8 @@ OpenGLVertexBuffer<Attribs...>::OpenGLVertexBuffer()
 
   Vertex::enableAll(0, 0, Vertex::bytesPerVertex());
 
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
   glBindVertexArray(0);
 }
 
@@ -230,6 +232,8 @@ OpenGLVertexBuffer<Attribs...>::bind()
 
   glBindVertexArray(m_vertexArrayObject);
 
+  glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+
   m_boundFlag = true;
 }
 
@@ -238,6 +242,8 @@ void
 OpenGLVertexBuffer<Attribs...>::unbind()
 {
   assert(m_boundFlag);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   glBindVertexArray(0);
 
