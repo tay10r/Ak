@@ -109,15 +109,15 @@ public:
 
       for (int x = 0; x < w; x++) {
 
-        const float u = float(x) / w;
-        const float v = float(y) / h;
+        const float u = float(x + 0.5f) / w;
+        const float v = float(y + 0.5f) / h;
 
         const int texelIndex = (y * w) + x;
 
         const glm::vec4 normalDepth = normalDepthTex[texelIndex];
 
-        const float xNDC = (u * 2) - 1;
-        const float yNDC = (v * 2) - 1;
+        const float xNDC = ((u * 2) - 1);
+        const float yNDC = ((v * 2) - 1);
         const float zNDC = normalDepth.w;
 
         const glm::vec4 worldSpacePoint = inverseMVP * glm::vec4(xNDC, yNDC, zNDC, 1.0f);
@@ -127,7 +127,7 @@ public:
         if (normalDepth.w == 1.0f)
           outTex[texelIndex] = glm::vec3(0, 0, 0);
         else
-          outTex[texelIndex] = computeTexel(normalizeByW(worldSpacePoint), (normal * 2.0f) * 0.5f, x, y);
+          outTex[texelIndex] = computeTexel(normalizeByW(worldSpacePoint), (normal * 2.0f) - 1.0f, x, y);
       }
     }
   }
