@@ -2,6 +2,8 @@
 
 #define RADIUS 4
 
+#define PERIMETER ((RADIUS * 2) + 1)
+
 #define PI 3.1415926535
 
 layout(location = 0) in vec2 texCoords;
@@ -16,16 +18,6 @@ layout(location = 3) uniform vec3 lightDir = vec3(-1, -1, 0);
 
 uniform sampler2D positionIntensityTexture;
 
-vec2 xy2uv(ivec2 xy, ivec2 texSize)
-{
-  return vec2((xy.x + 0.5) / float(texSize.x), (xy.y + 0.5) / float(texSize.y));
-}
-
-ivec2 uv2xy(vec2 uv, ivec2 texSize)
-{
-  return ivec2(round(uv.x * texSize.x), round(uv.y * texSize.y));
-}
-
 float atan2(float y, float x)
 {
   return (x == 0.0) ? sign(y) * PI / 2 : atan(y, x);
@@ -35,23 +27,23 @@ vec3 estimatePointNormal(vec4 centerTexel)
 {
   const ivec2 texSize = textureSize(positionIntensityTexture, 0);
 
-  const ivec2 xyCenter = uv2xy(texCoords, texSize);
+  const vec2 texelSize = vec2(1, 1) / vec2(texSize.x, texSize.y);
 
-  const ivec2 xyMin = xyCenter - RADIUS;
-  const ivec2 xyMax = xyCenter + RADIUS;
+  const vec2 xyMin = texCoords - (texelSize * float(RADIUS));
+  const vec2 xyMax = texCoords + (texelSize * float(RADIUS));
 
   vec4 nearest[8];
 
   float nearestSquaredDistances[8] = float[](-1, -1, -1, -1, -1, -1, -1, -1);
 
-  for (int y = xyMin.y; y <= xyMax.y; y++) {
+  for (int y = 0; y < PERIMETER; y++) {
 
-    for (int x = xyMin.x; x <= xyMax.x; x++) {
+    for (int x = 0; x < PERIMETER; x++) {
 
-      if (ivec2(x, y) == xyCenter)
+      if (ivec2(x, y) == ivec2(RADIUS, RADIUS))
         continue;
 
-      const vec2 neighborCoords = xy2uv(ivec2(x, y), texSize);
+      const vec2 neighborCoords = mix(xyMin, xyMax, vec2(float(x) / float(PERIMETER - 1), float(y) / float(PERIMETER - 1)));
 
       const vec4 neighbor = texture(positionIntensityTexture, neighborCoords);
 
@@ -65,8 +57,8 @@ vec3 estimatePointNormal(vec4 centerTexel)
       if (squaredDistance >= maxSquaredDistance)
         continue;
 
-      const float xLocal = x - xyCenter.x;
-      const float yLocal = y - xyCenter.y;
+      const float xLocal = x - float(RADIUS);
+      const float yLocal = y - float(RADIUS);
 
       const vec2 circleCoord = normalize(vec2(xLocal, yLocal));
 
