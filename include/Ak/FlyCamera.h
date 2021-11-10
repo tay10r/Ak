@@ -77,7 +77,7 @@ private:
         }
       }
 
-      if ((m_movePoints.size() > 1) && ((glm::length(m_movePoints[1] - m_movePoints[0]) > 0.00001))) {
+      if ((m_movePoints.size() > 1) && ((glm::length(m_movePoints[1] - m_movePoints[0]) > 0.00001)) && m_dragState) {
 
         vec2 delta = m_movePoints[1] - m_movePoints[0];
 

@@ -84,6 +84,8 @@ OpenGLLidarRenderProgram::render(const OpenGLVertexBuffer<glm::vec3, float>& lid
 
   glEnable(GL_DEPTH_TEST);
 
+  glEnable(GL_PROGRAM_POINT_SIZE);
+
   // Pass 1 : Project point positions and intensities onto texture.
 
   GLint dims[4]{ 0, 0, 0, 0 };
@@ -113,7 +115,10 @@ OpenGLLidarRenderProgram::render(const OpenGLVertexBuffer<glm::vec3, float>& lid
 
   glGetFloatv(GL_COLOR_CLEAR_VALUE, originalClearColor);
 
-  glClearColor(0, 0, 0, 0); // <- TODO : find a better way to do this.
+  // TODO: This statement below is used to initialize the texture containing the lidar points to zero, so that a texel
+  //       can be tested to see if it actually has a lidar point (values of zero indicate no point is present). Use the
+  //       stencil buffer instead to discard fragments that have no lidar point.
+  glClearColor(0, 0, 0, 0);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -144,6 +149,8 @@ OpenGLLidarRenderProgram::render(const OpenGLVertexBuffer<glm::vec3, float>& lid
   m_positionIntensityTexture.unbind();
 
   glDisable(GL_DEPTH_TEST);
+
+  glDisable(GL_PROGRAM_POINT_SIZE);
 }
 
 } // namespace Ak

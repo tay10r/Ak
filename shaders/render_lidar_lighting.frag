@@ -1,8 +1,8 @@
 #version 430 core
 
-#define RADIUS 8
+#define RADIUS 4
 
-#define PI 3.1415
+#define PI 3.1415926535
 
 layout(location = 0) in vec2 texCoords;
 
@@ -12,16 +12,23 @@ layout(location = 1) uniform vec3 eye = vec3(0.0, 0.0, 0.0);
 
 layout(location = 2) uniform float maxSquaredDistance = 1.0;
 
+layout(location = 3) uniform vec3 lightDir = vec3(-1, -1, 0);
+
 uniform sampler2D positionIntensityTexture;
 
 vec2 xy2uv(ivec2 xy, ivec2 texSize)
 {
-  return vec2(xy.x / float(texSize.x), xy.y / float(texSize.y));
+  return vec2((xy.x + 0.5) / float(texSize.x), (xy.y + 0.5) / float(texSize.y));
 }
 
 ivec2 uv2xy(vec2 uv, ivec2 texSize)
 {
   return ivec2(round(uv.x * texSize.x), round(uv.y * texSize.y));
+}
+
+float atan2(float y, float x)
+{
+  return (x == 0.0) ? sign(y) * PI / 2 : atan(y, x);
 }
 
 vec3 estimatePointNormal(vec4 centerTexel)
@@ -41,21 +48,21 @@ vec3 estimatePointNormal(vec4 centerTexel)
 
     for (int x = xyMin.x; x <= xyMax.x; x++) {
 
-      if ((x == xyCenter.x) && (y == xyCenter.y))
+      if (ivec2(x, y) == xyCenter)
         continue;
 
       const vec2 neighborCoords = xy2uv(ivec2(x, y), texSize);
 
       const vec4 neighbor = texture(positionIntensityTexture, neighborCoords);
 
-      if (neighbor.xyz == eye)
+      if (neighbor.xyz == vec3(0, 0, 0))
         continue;
 
       const vec3 deltaPos = neighbor.xyz - centerTexel.xyz;
 
       const float squaredDistance = dot(deltaPos, deltaPos);
 
-      if (squaredDistance > maxSquaredDistance)
+      if (squaredDistance >= maxSquaredDistance)
         continue;
 
       const float xLocal = x - xyCenter.x;
@@ -63,9 +70,9 @@ vec3 estimatePointNormal(vec4 centerTexel)
 
       const vec2 circleCoord = normalize(vec2(xLocal, yLocal));
 
-      const float angle = atan(circleCoord.y, circleCoord.x) + PI;
+      const float angle = atan2(circleCoord.y, circleCoord.x) + PI;
 
-      const int neighborIndex = clamp(int((angle / (2 * PI)) * 8), 0, 7);
+      const int neighborIndex = clamp(int((angle / (2 * PI)) * 7), 0, 7);
 
       if ((nearestSquaredDistances[neighborIndex] < 0) || (squaredDistance < nearestSquaredDistances[neighborIndex])) {
 
@@ -85,11 +92,11 @@ vec3 estimatePointNormal(vec4 centerTexel)
   for (int i = 0; i < 8; i++) {
     if (nearestSquaredDistances[i] < 0)
       continue;
+
     edges[edgeCount] = nearest[i].xyz - centerTexel.xyz;
+
     edgeCount++;
   }
-
-  vec3 avgNormal = vec3(0, 0, 0);
 
   if (edgeCount < 2) {
     return vec3(0, 0, 0);
@@ -100,7 +107,7 @@ vec3 estimatePointNormal(vec4 centerTexel)
     for (int i = 0; i < edgeCount; i++) {
       normalSum += normalize(cross(edges[(i + 1) % edgeCount], edges[i]));
     }
-    return normalize(normalSum * (1.0 / float(edgeCount + 1)));
+    return normalize(normalSum * (1.0 / float(edgeCount)));
   }
 }
 
@@ -109,8 +116,16 @@ main()
 {
   vec4 centerTexel = texture(positionIntensityTexture, texCoords);
 
-  if (centerTexel.xyz == eye)
+  if (centerTexel.xyz == vec3(0, 0, 0)) {
     outColor = vec4(0, 0, 0, 1);
-  else
+  } else {
+    /*
+    vec3 normal = estimatePointNormal(centerTexel);
+    vec3 ambient = vec3(0.01, 0.01, 0.01);
+    float lightingLevel = (dot(lightDir, normal) + 1.0) * 0.5;
+    vec3 lightingResult = mix(ambient, vec3(1.0, 1.0, 1.0), lightingLevel);
+    outColor = vec4(lightingResult, 1.0);
+    */
     outColor = vec4((estimatePointNormal(centerTexel) + 1.0) * 0.5, 1.0);
+  }
 }

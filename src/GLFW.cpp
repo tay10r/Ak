@@ -69,7 +69,7 @@ mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
   if (action == GLFW_PRESS)
     window_->notifyMousePress(button, mods);
-  else
+  else if (action == GLFW_RELEASE)
     window_->notifyMouseRelease(button, mods);
 }
 
@@ -80,7 +80,7 @@ keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 
   if (action == GLFW_PRESS)
     window_->notifyKeyPress(key, scancode, mods);
-  else
+  else if (action == GLFW_RELEASE)
     window_->notifyKeyRelease(key, scancode, mods);
 }
 

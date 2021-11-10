@@ -30,13 +30,13 @@ public:
 
   const char* title() const noexcept override { return "LiDAR Renderer"; }
 
-  void requestAnimationFrame(Ak::GLFWWindow&) override
+  void requestAnimationFrame(Ak::GLFWWindow& window) override
   {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 view = m_camera.worldToCameraMatrix();
 
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), window.aspectRatio(), 0.1f, 100.0f);
 
     glm::mat4 mvp = proj * view;
 
