@@ -148,11 +148,11 @@ OpenGLTexture2D::unbind()
 }
 
 void
-OpenGLTexture2D::resize(GLint w, GLint h, GLenum format, GLenum type)
+OpenGLTexture2D::resize(GLint w, GLint h, GLenum internalFormat, GLenum format, GLenum type)
 {
   assert(m_boundFlag);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, format, w, h, 0, format, type, nullptr);
+  glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, nullptr);
 }
 
 void

@@ -7,6 +7,8 @@ namespace Ak {
 void
 OpenGLBlurEffect::render(OpenGLTexture2D& texture)
 {
+  (void)texture;
+
   assert(isBound());
 
   assert(texture.isBound());

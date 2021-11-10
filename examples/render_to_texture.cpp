@@ -38,7 +38,7 @@ public:
 
     m_colorAttachment.bind();
 
-    m_colorAttachment.resize(m_renderWidth, m_renderHeight, GL_RGBA, GL_FLOAT);
+    m_colorAttachment.resize(m_renderWidth, m_renderHeight, GL_RGBA32F, GL_RGBA, GL_FLOAT);
 
     m_colorAttachment.unbind();
 

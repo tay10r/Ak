@@ -43,6 +43,10 @@ public:
   virtual void mousePressEvent(int /* button */, int /* mods */) {}
 
   virtual void mouseReleaseEvent(int /* button */, int /* mods */) {}
+
+  virtual void keyPressEvent(int /* key */, int /* scancode */, int /* mods */) {}
+
+  virtual void keyReleaseEvent(int /* key */, int /* scancode */, int /* mods */) {}
 };
 
 class GLFWWindow final
@@ -61,6 +65,8 @@ public:
   bool makeCurrent();
 
   bool doneCurrent();
+
+  float aspectRatio() const;
 
   /// Uses the current framebuffer width and height and notifies the event observers as if it was just changed to that
   /// size. This can be helpful when used to initialize data that depends on the width and height of the window.
@@ -81,6 +87,12 @@ public:
 
   /// @note Only meant for internal use.
   void notifyMouseRelease(int, int);
+
+  /// @note Only meant for internal use.
+  void notifyKeyPress(int, int, int);
+
+  /// @note Only meant for internal use.
+  void notifyKeyRelease(int, int, int);
 
   /// @note Only meant for internal use.
   void notifyAnimationFrame();

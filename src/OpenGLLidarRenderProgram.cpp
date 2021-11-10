@@ -95,7 +95,7 @@ OpenGLLidarRenderProgram::render(const OpenGLVertexBuffer<glm::vec3, float>& lid
 
   m_positionIntensityTexture.bind();
 
-  m_positionIntensityTexture.resize(w, h, GL_RGBA, GL_FLOAT);
+  m_positionIntensityTexture.resize(w, h, GL_RGBA32F, GL_RGBA, GL_FLOAT);
 
   m_positionIntensityTexture.unbind();
 

@@ -73,6 +73,17 @@ mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     window_->notifyMouseRelease(button, mods);
 }
 
+void
+keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+  GLFWWindow* window_ = (GLFWWindow*)glfwGetWindowUserPointer(window);
+
+  if (action == GLFW_PRESS)
+    window_->notifyKeyPress(key, scancode, mods);
+  else
+    window_->notifyKeyRelease(key, scancode, mods);
+}
+
 } // namespace
 
 bool
@@ -84,6 +95,7 @@ GLFW::init(MSAA msaa)
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
   switch (msaa) {
     case MSAA::none:
@@ -127,6 +139,8 @@ GLFWWindow::GLFWWindow(int w, int h, const char* title, GLFWmonitor* monitor, GL
   glfwSetCursorPosCallback(m_self, cursorPosCallback);
 
   glfwSetMouseButtonCallback(m_self, mouseButtonCallback);
+
+  glfwSetKeyCallback(m_self, keyCallback);
 
   if (m_self) {
 
@@ -180,6 +194,15 @@ GLFWWindow::doneCurrent()
   return true;
 }
 
+float
+GLFWWindow::aspectRatio() const
+{
+  int w = 0;
+  int h = 0;
+  glfwGetFramebufferSize(m_self, &w, &h);
+  return float(w) / h;
+}
+
 void
 GLFWWindow::fakeFramebufferResizeEvent()
 {
@@ -216,6 +239,20 @@ GLFWWindow::notifyMouseRelease(int button, int mods)
 {
   for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
     eventObserver->mouseReleaseEvent(button, mods);
+}
+
+void
+GLFWWindow::notifyKeyPress(int key, int scancode, int mods)
+{
+  for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
+    eventObserver->keyPressEvent(key, scancode, mods);
+}
+
+void
+GLFWWindow::notifyKeyRelease(int key, int scancode, int mods)
+{
+  for (std::shared_ptr<GLFWEventObserver>& eventObserver : m_eventObservers)
+    eventObserver->keyReleaseEvent(key, scancode, mods);
 }
 
 void

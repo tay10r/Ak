@@ -66,6 +66,8 @@ run(int argc, char** argv, SingleWindowGLFWApp::FactoryMethod factoryMethod)
       std::unique_ptr<SingleWindowGLFWApp> app(factoryMethod(int(appArgs.size()), &appArgs[0], window));
       if (!app)
         success = false;
+      else
+        glfwShowWindow(window);
 
       const char* title = app ? app->title() : nullptr;
       if (title)

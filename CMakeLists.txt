@@ -8,6 +8,16 @@ project(Ak LANGUAGES CXX C)
 
 include(CMakeRC.cmake)
 
+####################################################
+# Include BVH library, for ray tracing algorithms. #
+####################################################
+
+include(FetchContent)
+
+FetchContent_Declare(bvh URL "https://github.com/madmann91/bvh/archive/master.zip")
+
+FetchContent_MakeAvailable(bvh)
+
 #####################################################################################
 # Use the SPIRV-Cross Tools to transpile the shaders to run on the target platform. #
 #####################################################################################
@@ -69,7 +79,8 @@ transpile_shaders(shaderlib
   render_texture_quad_pair
   render_points
   render_lidar
-  render_lidar_lighting)
+  render_lidar_lighting
+  hrt_render_mesh)
 
 ###########################
 # Build the main library. #
@@ -77,10 +88,13 @@ transpile_shaders(shaderlib
 
 find_package(glm REQUIRED)
 find_package(glfw3 REQUIRED)
+find_package(OpenMP)
 
 add_library(Ak
+  include/Ak/ObjMeshModel.h
   include/Ak/OpenGLBlurEffect.h
   include/Ak/OpenGLFramebuffer.h
+  include/Ak/OpenGLHRTMeshRenderProgram.h
   include/Ak/OpenGLLidarRenderProgram.h
   include/Ak/OpenGLPointRenderProgram.h
   include/Ak/OpenGLRenderbuffer.h
@@ -90,8 +104,10 @@ add_library(Ak
   include/Ak/OpenGLTextureQuadPair.h
   include/Ak/GLFW.h
   include/Ak/SingleWindowGLFWApp.h
+  src/ObjMeshModel.cpp
   src/OpenGLBlurEffect.cpp
   src/OpenGLFramebuffer.cpp
+  src/OpenGLHRTMeshRenderProgram.cpp
   src/OpenGLLidarRenderProgram.cpp
   src/OpenGLPointRenderProgram.cpp
   src/OpenGLRenderbuffer.cpp
@@ -105,7 +121,13 @@ add_library(Ak
   src/stb/stb_image.c
   src/stb/stb_image_write.h
   src/stb/stb_image_write.c
+  src/tiny_obj_loader/tiny_obj_loader.h
+  src/tiny_obj_loader/tiny_obj_loader.cpp
   glad/src/glad.c)
+
+if(TARGET OpenMP::OpenMP_CXX)
+  target_link_libraries(Ak PUBLIC OpenMP::OpenMP_CXX)
+endif(TARGET OpenMP::OpenMP_CXX)
 
 if(NOT MSVC)
   target_compile_options(Ak PRIVATE -Wall -Wextra -Werror -Wfatal-errors)
@@ -116,9 +138,10 @@ target_include_directories(Ak
     include
     glad/include
   PRIVATE
-    src/stb)
+    src/stb
+    src/tiny_obj_loader)
 
-target_link_libraries(Ak PUBLIC glm::glm AkShaders)
+target_link_libraries(Ak PUBLIC glm::glm AkShaders bvh)
 
 ###############################
 # Build the example programs. #
