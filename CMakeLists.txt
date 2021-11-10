@@ -79,7 +79,8 @@ transpile_shaders(shaderlib
   render_texture_quad_pair
   render_points
   render_lidar
-  render_lidar_lighting
+  render_lidar_normal_estimation
+  render_lidar_points_to_spheres
   hrt_render_mesh)
 
 ###########################

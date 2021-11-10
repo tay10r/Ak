@@ -14,8 +14,6 @@ layout(location = 1) uniform vec3 eye = vec3(0.0, 0.0, 0.0);
 
 layout(location = 2) uniform float maxSquaredDistance = 1.0;
 
-layout(location = 3) uniform vec3 lightDir = vec3(-1, -1, 0);
-
 uniform sampler2D positionIntensityTexture;
 
 float atan2(float y, float x)
@@ -93,11 +91,11 @@ vec3 estimatePointNormal(vec4 centerTexel)
   if (edgeCount < 2) {
     return vec3(0, 0, 0);
   } else if (edgeCount == 2) {
-    return normalize(cross(edges[1], edges[0]));
+    return normalize(cross(edges[0], edges[1]));
   } else {
     vec3 normalSum = vec3(0, 0, 0);
     for (int i = 0; i < edgeCount; i++) {
-      normalSum += normalize(cross(edges[(i + 1) % edgeCount], edges[i]));
+      normalSum += normalize(cross(edges[i], edges[(i + 1) % edgeCount]));
     }
     return normalize(normalSum * (1.0 / float(edgeCount)));
   }
@@ -111,13 +109,6 @@ main()
   if (centerTexel.xyz == vec3(0, 0, 0)) {
     outColor = vec4(0, 0, 0, 1);
   } else {
-    /*
-    vec3 normal = estimatePointNormal(centerTexel);
-    vec3 ambient = vec3(0.01, 0.01, 0.01);
-    float lightingLevel = (dot(lightDir, normal) + 1.0) * 0.5;
-    vec3 lightingResult = mix(ambient, vec3(1.0, 1.0, 1.0), lightingLevel);
-    outColor = vec4(lightingResult, 1.0);
-    */
     outColor = vec4((estimatePointNormal(centerTexel) + 1.0) * 0.5, 1.0);
   }
 }

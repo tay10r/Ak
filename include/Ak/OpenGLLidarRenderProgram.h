@@ -34,8 +34,7 @@ private:
   OpenGLFramebuffer m_framebuffer;
 
   OpenGLShaderProgram m_renderLidarProgram;
-
-  OpenGLScreenSpaceEffect m_renderLidarLightingProgram;
+  _ OpenGLScreenSpaceEffect m_normalEstimationProgram;
 
   /// The MVP location for the point rendering program.
   GLint m_mvpLocation = -1;

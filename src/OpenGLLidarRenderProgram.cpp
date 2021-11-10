@@ -10,7 +10,8 @@ namespace Ak {
 
 OpenGLLidarRenderProgram::OpenGLLidarRenderProgram()
   : m_renderLidarProgram("shaders/render_lidar.vert", "shaders/render_lidar.frag")
-  , m_renderLidarLightingProgram("shaders/render_lidar_lighting.vert", "shaders/render_lidar_lighting.frag")
+  , m_normalEstimationProgram("shaders/render_lidar_normal_estimation.vert",
+                              "shaders/render_lidar_normal_estimation.frag")
 {
   m_renderLidarProgram.bind();
 
@@ -20,11 +21,11 @@ OpenGLLidarRenderProgram::OpenGLLidarRenderProgram()
 
   assert(m_mvpLocation >= 0);
 
-  m_renderLidarLightingProgram.bind();
+  m_normalEstimationProgram.bind();
 
-  m_eyeLocation = m_renderLidarLightingProgram.getUniformLocation("eye");
+  m_eyeLocation = m_normalEstimationProgram.getUniformLocation("eye");
 
-  m_renderLidarLightingProgram.unbind();
+  m_normalEstimationProgram.unbind();
 
   m_framebuffer.bind();
 
@@ -70,11 +71,11 @@ OpenGLLidarRenderProgram::setMVP(const glm::mat4& mvp)
 void
 OpenGLLidarRenderProgram::setEye(const glm::vec3& eye)
 {
-  m_renderLidarLightingProgram.bind();
+  m_normalEstimationProgram.bind();
 
-  m_renderLidarLightingProgram.setUniformValue(m_eyeLocation, eye);
+  m_normalEstimationProgram.setUniformValue(m_eyeLocation, eye);
 
-  m_renderLidarLightingProgram.unbind();
+  m_normalEstimationProgram.unbind();
 }
 
 void
@@ -136,15 +137,15 @@ OpenGLLidarRenderProgram::render(const OpenGLVertexBuffer<glm::vec3, float>& lid
 
   m_positionIntensityTexture.bind();
 
-  m_renderLidarLightingProgram.bind();
+  m_normalEstimationProgram.bind();
 
-  m_renderLidarLightingProgram.bindQuad();
+  m_normalEstimationProgram.bindQuad();
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  m_renderLidarLightingProgram.unbindQuad();
+  m_normalEstimationProgram.unbindQuad();
 
-  m_renderLidarLightingProgram.unbind();
+  m_normalEstimationProgram.unbind();
 
   m_positionIntensityTexture.unbind();
 
