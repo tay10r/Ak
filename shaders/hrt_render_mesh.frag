@@ -15,5 +15,5 @@ main()
 {
   outAlbedo = texture(albedoTexture, texCoordsFromVertShader).rgb;
 
-  outNormalDepth = vec4(normalDepthFromVertShader.xyz, (gl_FragCoord.z - 0.5) * 2);
+  outNormalDepth = vec4(normalDepthFromVertShader.xyz, (gl_FragCoord.z * 2.0) - 1.0);
 }
