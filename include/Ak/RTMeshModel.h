@@ -102,9 +102,9 @@ RTMeshModel<Float>::fromObjModel(const ObjMeshModel& objMeshModel)
       const Vec2 t1(shapeView.tx(i + 1), shapeView.ty(i + 1));
       const Vec2 t2(shapeView.tx(i + 2), shapeView.ty(i + 2));
 
-      rtMeshModel.m_triangles[i] = Triangle(p0, p1, p2);
+      rtMeshModel.m_triangles[i / 3] = Triangle(p0, p1, p2);
 
-      rtMeshModel.m_attribs[i] = Attrib{ { n0, n1, n2 }, { t0, t1, t2 } };
+      rtMeshModel.m_attribs[i / 3] = Attrib{ { n0, n1, n2 }, { t0, t1, t2 } };
     }
   }
 
@@ -160,7 +160,10 @@ RTMeshModel<Float>::commit()
 
   builder.build(global_bbox, bboxes.get(), centers.get(), m_triangleCount);
 
-  m_triangles = permute_primitives(m_triangles.get(), m_bvh.primitive_indices.get(), m_triangleCount);
+  m_triangles = bvh::permute_primitives(m_triangles.get(), m_bvh.primitive_indices.get(), m_triangleCount);
+
+  if (m_attribs)
+    m_attribs = bvh::permute_primitives(m_attribs.get(), m_bvh.primitive_indices.get(), m_triangleCount);
 }
 
 template<typename Float>
