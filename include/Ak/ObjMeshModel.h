@@ -20,6 +20,13 @@ public:
     constexpr float px(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 0]; }
     constexpr float py(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 1]; }
     constexpr float pz(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 2]; }
+
+    constexpr float nx(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 3]; }
+    constexpr float ny(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 4]; }
+    constexpr float nz(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 5]; }
+
+    constexpr float tx(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 6]; }
+    constexpr float ty(size_t vertexIndex) const noexcept { return vertexBuffer[(vertexIndex * 8) + 7]; }
   };
 
   ObjMeshModel();

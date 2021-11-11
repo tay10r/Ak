@@ -16,7 +16,9 @@ template<typename Float>
 class RTMeshModel final
 {
 public:
-  using Vec3 = bvh::Vector3<Float>;
+  using Vec2 = bvh::Vector<Float, 2>;
+
+  using Vec3 = bvh::Vector<Float, 3>;
 
   using Triangle = bvh::Triangle<Float>;
 
@@ -34,6 +36,13 @@ public:
 
   using AnyHit = typename AnyIntersector::Result;
 
+  struct Attrib final
+  {
+    Vec3 normals[3];
+
+    Vec3 texCoords[3];
+  };
+
   static std::vector<RTMeshModel> fromObjModel(const ObjMeshModel& objMeshModel);
 
   void commit();
@@ -44,6 +53,10 @@ public:
 
   std::optional<ClosestHit> findClosestHit(const Ray& ray) const;
 
+  const Triangle& getTriangle(size_t index) const noexcept { return m_triangles[index]; }
+
+  const Attrib& getAttrib(size_t index) const noexcept { return m_attribs[index]; }
+
 private:
   static std::size_t getTriangleCount(const ObjMeshModel& objMeshModel);
 
@@ -51,6 +64,8 @@ private:
   size_t m_triangleCount = 0;
 
   std::unique_ptr<Triangle[]> m_triangles;
+
+  std::unique_ptr<Attrib[]> m_attribs;
 
   Bvh m_bvh;
 };
@@ -77,7 +92,17 @@ RTMeshModel<Float>::fromObjModel(const ObjMeshModel& objMeshModel)
       const Vec3 p1(shapeView.px(i + 1), shapeView.py(i + 1), shapeView.pz(i + 1));
       const Vec3 p2(shapeView.px(i + 2), shapeView.py(i + 2), shapeView.pz(i + 2));
 
+      const Vec3 n0(shapeView.nx(i + 0), shapeView.ny(i + 0), shapeView.nz(i + 0));
+      const Vec3 n1(shapeView.nx(i + 1), shapeView.ny(i + 1), shapeView.nz(i + 1));
+      const Vec3 n2(shapeView.nx(i + 2), shapeView.ny(i + 2), shapeView.nz(i + 2));
+
+      const Vec2 t0(shapeView.tx(i + 0), shapeView.ty(i + 0));
+      const Vec2 t1(shapeView.tx(i + 1), shapeView.ty(i + 1));
+      const Vec2 t2(shapeView.tx(i + 2), shapeView.ty(i + 2));
+
       rtMeshModel.m_triangles[i] = Triangle(p0, p1, p2);
+
+      rtMeshModel.m_attribs[i] = Attrib{ { n0, n1, n2 }, { t0, t1, t2 } };
     }
   }
 
