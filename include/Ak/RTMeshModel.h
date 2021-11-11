@@ -84,6 +84,8 @@ RTMeshModel<Float>::fromObjModel(const ObjMeshModel& objMeshModel)
 
     rtMeshModel.m_triangles.reset(new Triangle[shapeView.vertexCount / 3]);
 
+    rtMeshModel.m_attribs.reset(new Attrib[shapeView.vertexCount / 3]);
+
     rtMeshModel.m_triangleCount = shapeView.vertexCount / 3;
 
     for (size_t i = 0; i < shapeView.vertexCount; i += 3) {
