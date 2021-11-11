@@ -40,7 +40,7 @@ public:
   {
     Vec3 normals[3];
 
-    Vec3 texCoords[3];
+    Vec2 texCoords[3];
   };
 
   static std::vector<RTMeshModel> fromObjModel(const ObjMeshModel& objMeshModel);
