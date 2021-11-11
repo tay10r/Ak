@@ -5,8 +5,8 @@
 namespace Ak {
 
 OpenGLTextureQuadPair::RenderProgram::RenderProgram()
-  : OpenGLShaderProgramTemplate<RenderProgram>("shaders/render_texture_quad_pair.vert",
-                                               "shaders/render_texture_quad_pair.frag")
+  : OpenGLShaderProgramTemplate<RenderProgram>(":/shaders/render_texture_quad_pair.vert",
+                                               ":/shaders/render_texture_quad_pair.frag")
 {}
 
 OpenGLTextureQuadPair::OpenGLTextureQuadPair(OpenGLTexture2D* texture)

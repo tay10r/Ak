@@ -19,9 +19,17 @@ template<GLenum Kind>
 class Shader final
 {
 public:
-  Shader(const char* sourcePath)
+  static std::string argToSource(const char* sourceArg)
   {
-    std::string source = openSource(sourcePath);
+    if ((sourceArg[0] != ':') && (sourceArg[1] != '/'))
+      return sourceArg;
+    else
+      return openSource(sourceArg + 2);
+  }
+
+  Shader(const char* sourceArg)
+  {
+    std::string source = argToSource(sourceArg);
 
     m_shaderID = glCreateShader(Kind);
 

@@ -11,7 +11,8 @@
 namespace Ak {
 
 OpenGLPointRenderProgram::OpenGLPointRenderProgram()
-  : OpenGLShaderProgramTemplate<OpenGLPointRenderProgram>("shaders/render_points.vert", "shaders/render_points.frag")
+  : OpenGLShaderProgramTemplate<OpenGLPointRenderProgram>(":/shaders/render_points.vert",
+                                                          ":/shaders/render_points.frag")
 {
   bind();
 

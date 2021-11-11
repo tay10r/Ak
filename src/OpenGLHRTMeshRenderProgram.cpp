@@ -7,7 +7,7 @@
 namespace Ak {
 
 OpenGLHRTMeshRenderProgram::OpenGLHRTMeshRenderProgram()
-  : OpenGLShaderProgram("shaders/hrt_render_mesh.vert", "shaders/hrt_render_mesh.frag")
+  : OpenGLShaderProgram(":/shaders/hrt_render_mesh.vert", ":/shaders/hrt_render_mesh.frag")
 {
   bind();
 

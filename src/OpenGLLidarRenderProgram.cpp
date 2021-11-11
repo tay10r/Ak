@@ -9,9 +9,9 @@
 namespace Ak {
 
 OpenGLLidarRenderProgram::OpenGLLidarRenderProgram()
-  : m_renderLidarProgram("shaders/render_lidar.vert", "shaders/render_lidar.frag")
-  , m_normalEstimationProgram("shaders/render_lidar_normal_estimation.vert",
-                              "shaders/render_lidar_normal_estimation.frag")
+  : m_renderLidarProgram(":/shaders/render_lidar.vert", ":/shaders/render_lidar.frag")
+  , m_normalEstimationProgram(":/shaders/render_lidar_normal_estimation.vert",
+                              ":/shaders/render_lidar_normal_estimation.frag")
 {
   m_renderLidarProgram.bind();
 
