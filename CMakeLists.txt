@@ -126,6 +126,8 @@ add_library(Ak
   src/tiny_obj_loader/tiny_obj_loader.cpp
   glad/src/glad.c)
 
+target_compile_features(Ak PUBLIC cxx_std_17)
+
 if(TARGET OpenMP::OpenMP_CXX)
   target_link_libraries(Ak PUBLIC OpenMP::OpenMP_CXX)
 endif(TARGET OpenMP::OpenMP_CXX)
@@ -143,6 +145,10 @@ target_include_directories(Ak
     src/tiny_obj_loader)
 
 target_link_libraries(Ak PUBLIC glm::glm AkShaders bvh)
+
+if(UNIX)
+  target_link_libraries(Ak PUBLIC dl)
+endif(UNIX)
 
 ###############################
 # Build the example programs. #
