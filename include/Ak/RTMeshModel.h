@@ -34,6 +34,8 @@ public:
 
   using AnyHit = typename AnyIntersector::Result;
 
+  static std::vector<RTMeshModel> fromObjModel(const ObjMeshModel& objMeshModel);
+
   void commit();
 
   void useObjModel(const ObjMeshModel& objMeshModel);
@@ -52,6 +54,35 @@ private:
 
   Bvh m_bvh;
 };
+
+template<typename Float>
+std::vector<RTMeshModel<Float>>
+RTMeshModel<Float>::fromObjModel(const ObjMeshModel& objMeshModel)
+{
+  std::vector<RTMeshModel<Float>> output;
+
+  for (const ObjMeshModel::ShapeView& shapeView : objMeshModel.getShapeViews()) {
+
+    output.emplace_back();
+
+    RTMeshModel& rtMeshModel = output.back();
+
+    rtMeshModel.m_triangles.reset(new Triangle[shapeView.vertexCount / 3]);
+
+    rtMeshModel.m_triangleCount = shapeView.vertexCount / 3;
+
+    for (size_t i = 0; i < shapeView.vertexCount; i += 3) {
+
+      const Vec3 p0(shapeView.px(i + 0), shapeView.py(i + 0), shapeView.pz(i + 0));
+      const Vec3 p1(shapeView.px(i + 1), shapeView.py(i + 1), shapeView.pz(i + 1));
+      const Vec3 p2(shapeView.px(i + 2), shapeView.py(i + 2), shapeView.pz(i + 2));
+
+      rtMeshModel.m_triangles[i] = Triangle(p0, p1, p2);
+    }
+  }
+
+  return output;
+}
 
 template<typename Float>
 void
