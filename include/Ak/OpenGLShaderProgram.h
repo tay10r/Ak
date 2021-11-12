@@ -33,6 +33,8 @@ public:
 
   GLint getUniformLocation(const char* name) const;
 
+  void setUniformValue(GLint location, int value);
+
   void setUniformValue(GLint location, float value);
 
   void setUniformValue(GLint location, const glm::vec2& value);

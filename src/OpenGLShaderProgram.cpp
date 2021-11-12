@@ -202,6 +202,14 @@ OpenGLShaderProgram::getUniformLocation(const char* name) const
 }
 
 void
+OpenGLShaderProgram::setUniformValue(GLint location, int value)
+{
+  assert(m_boundFlag);
+
+  glUniform1i(location, value);
+}
+
+void
 OpenGLShaderProgram::setUniformValue(GLint location, float value)
 {
   assert(m_boundFlag);
